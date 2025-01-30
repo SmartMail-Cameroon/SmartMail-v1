@@ -1,0 +1,201 @@
+package com.jaures.smartmail.ui.screens.support
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.jaures.smartmail.ui.screens.dailyreport.BottomNavigationBar
+
+@Composable
+fun SupportScreen(navController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp) // Padding horizontal pour un espacement uniforme
+    ) {
+        // Header
+        Text(
+            text = "Support",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            textAlign = TextAlign.Center
+        )
+
+        // Messages Column: Centre les messages sur l'écran
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center, // Centre les messages verticalement
+            horizontalAlignment = Alignment.CenterHorizontally // Aligne les messages horizontalement au centre
+        ) {
+            // Message 1
+            MessageBubble(
+                avatar = com.jaures.smartmail.R.drawable.ic_avatar_female,
+                message = "Hi KitsBase, let me know you need help and you can ask us any question.",
+                timestamp = "08:20 AM",
+                isUser = false,
+                bubbleColor = Color(0xFFF5F5F5)
+            )
+            Spacer(modifier = Modifier.height(40.dp))
+
+
+            // Message 2
+            MessageBubble(
+                message = "How to create a new Email?",
+                timestamp = "08:21 AM",
+                isUser = true,
+                bubbleColor = Color(0xFFFFEDED)
+            )
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // Message 3
+            MessageBubble(
+                avatar = com.jaures.smartmail.R.drawable.ic_avatar_male,
+                message = "Click on 'New'.",
+                timestamp = "08:22 AM",
+                isUser = false,
+                bubbleColor = Color(0xFFF5F5F5)
+            )
+        }
+
+        // Send Button
+        Button(
+            onClick = { /* Handle Send */ },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Send",
+                color = Color.White,
+                fontSize = 16.sp
+            )
+        }
+     
+            com.jaures.smartmail.ui.components.BottomNavigationBar(navController = navController)
+        
+    }
+}
+
+@Composable
+fun MessageBubble(
+    avatar: Int? = null,
+    message: String,
+    timestamp: String,
+    isUser: Boolean,
+    bubbleColor: Color
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start,
+        verticalAlignment = Alignment.Top
+    ) {
+        if (!isUser) {
+            avatar?.let {
+                Image(
+                    painter = painterResource(id = it),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(color = Color.Gray)
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+
+        Column(
+            modifier = Modifier
+                .widthIn(max = 250.dp) // Limite de la largeur de la bulle
+                .padding(horizontal = 4.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = bubbleColor,
+                        shape = MaterialTheme.shapes.medium
+                    )
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .offset(
+                        x = if (isUser) (-8.dp) else 8.dp,
+                        y = 0.dp
+                    )
+            ) {
+                Text(
+                    text = message,
+                    color = if (isUser) Color.White else Color.Black,
+                    fontSize = 14.sp
+                )
+            }
+            Text(
+                text = timestamp,
+                color = Color.Gray,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.Start)
+            )
+        }
+
+        if (isUser) {
+            Spacer(modifier = Modifier.width(8.dp))
+            avatar?.let {
+                Image(
+                    painter = painterResource(id = it),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(color = Color.Gray)
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSupportScreen() {
+    val navController = rememberNavController()
+    SupportScreen(navController= navController)
+}
