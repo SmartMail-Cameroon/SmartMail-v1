@@ -24,8 +24,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+
 @Composable
-fun ImportantScreen() {
+fun ImportantScreen(navController : NavController) {
     Column(modifier = Modifier.fillMaxSize()) {
         // Section d'entête (non défilable)
         HeaderSection()
@@ -288,5 +291,6 @@ fun MessageItem(name: String, subject: String, message: String, date: String, is
 @Preview(showBackground = true, widthDp = 390, heightDp = 800)
 @Composable
 fun PreviewImportantScreen() {
-    ImportantScreen()
+    val navController = rememberNavController()
+    ImportantScreen(navController = navController)
 }

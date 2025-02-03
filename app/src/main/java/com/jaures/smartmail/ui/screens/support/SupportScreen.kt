@@ -2,26 +2,13 @@ package com.jaures.smartmail.ui.screens.support
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,81 +23,68 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.jaures.smartmail.ui.screens.dailyreport.BottomNavigationBar
+import com.jaures.smartmail.ui.components.BottomNavigationBar
 
 @Composable
 fun SupportScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp) // Padding horizontal pour un espacement uniforme
-    ) {
-        // Header
-        Text(
-            text = "Support",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            textAlign = TextAlign.Center
-        )
-
-        // Messages Column: Centre les messages sur l'écran
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        }
+    ) { paddingValues ->
+        // Column to hold the content and make sure the padding is taken into account
         Column(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.Center, // Centre les messages verticalement
-            horizontalAlignment = Alignment.CenterHorizontally // Aligne les messages horizontalement au centre
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
-            // Message 1
-            MessageBubble(
-                avatar = com.jaures.smartmail.R.drawable.ic_avatar_female,
-                message = "Hi KitsBase, let me know you need help and you can ask us any question.",
-                timestamp = "08:20 AM",
-                isUser = false,
-                bubbleColor = Color(0xFFF5F5F5)
-            )
-            Spacer(modifier = Modifier.height(40.dp))
-
-
-            // Message 2
-            MessageBubble(
-                message = "How to create a new Email?",
-                timestamp = "08:21 AM",
-                isUser = true,
-                bubbleColor = Color(0xFFFFEDED)
-            )
-            Spacer(modifier = Modifier.height(40.dp))
-
-            // Message 3
-            MessageBubble(
-                avatar = com.jaures.smartmail.R.drawable.ic_avatar_male,
-                message = "Click on 'New'.",
-                timestamp = "08:22 AM",
-                isUser = false,
-                bubbleColor = Color(0xFFF5F5F5)
-            )
-        }
-
-        // Send Button
-        Button(
-            onClick = { /* Handle Send */ },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
+            // Header
             Text(
-                text = "Send",
-                color = Color.White,
-                fontSize = 16.sp
+                text = "Support",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                textAlign = TextAlign.Center
             )
+
+            // LazyColumn for dynamic message list with scrolling
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(vertical = 8.dp)
+            ) {
+                items(10) { index ->  // Simulate a series of 10 fake messages
+                    val isUser = index % 2 == 0
+                    MessageBubble(
+                        avatar = if (isUser) com.jaures.smartmail.R.drawable.ic_avatar_female else com.jaures.smartmail.R.drawable.ic_avatar_male,
+                        message = if (isUser) "How do I reset my password?" else "Please follow the steps on the settings page.",
+                        timestamp = "08:2${index} AM",
+                        isUser = isUser,
+                        bubbleColor = if (isUser) Color(0xFFFFEDED) else Color(0xFFF5F5F5)
+                    )
+                }
+            }
+
+            // Send Button
+            Button(
+                onClick = { /* Handle Send */ },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Send",
+                    color = Color.White,
+                    fontSize = 16.sp
+                )
+            }
         }
-     
-            com.jaures.smartmail.ui.components.BottomNavigationBar(navController = navController)
-        
     }
 }
 
@@ -155,10 +129,6 @@ fun MessageBubble(
                         shape = MaterialTheme.shapes.medium
                     )
                     .padding(horizontal = 12.dp, vertical = 8.dp)
-                    .offset(
-                        x = if (isUser) (-8.dp) else 8.dp,
-                        y = 0.dp
-                    )
             ) {
                 Text(
                     text = message,
@@ -193,9 +163,10 @@ fun MessageBubble(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewSupportScreen() {
     val navController = rememberNavController()
-    SupportScreen(navController= navController)
+    SupportScreen(navController = navController)
 }

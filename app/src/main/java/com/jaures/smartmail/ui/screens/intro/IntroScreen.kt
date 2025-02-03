@@ -1,25 +1,37 @@
 package com.jaures.smartmail.ui.screens.intro
 
 // Importation des librairies nécessaires pour le développement de l'interface utilisateur avec Jetpack Compose
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,10 +49,8 @@ import androidx.navigation.compose.rememberNavController
 import com.jaures.smartmail.R
 import com.jaures.smartmail.ui.components.CommonButton
 
-// Fonction principale de l'écran d'introduction
 @Composable
 fun IntroScreen(navController: NavController) {
-    // Liste des éléments de contenu pour le carrousel (composants visuels)
     val contentList = listOf(
         ContentItem(
             image = R.drawable.image1,
@@ -64,34 +74,29 @@ fun IntroScreen(navController: NavController) {
         )
     )
 
-    // Variable d'état pour suivre l'index de l'élément affiché
     var currentIndex by remember { mutableStateOf(0) }
 
-    // Structure de la mise en page de l'écran avec un alignement centré
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState()) // Ajout du défilement
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Barre supérieure avec boutons pour "Retour" et "Passer"
         TopBar(
             currentIndex = currentIndex,
             onSkipClick = { navController.navigate("login") },
             onBackClick = { if (currentIndex > 0) currentIndex-- }
         )
 
-        // Section du contenu avec des animations (transition entre les éléments)
         AnimatedContentSection(contentList, currentIndex)
 
-        // Bouton "Next" en bas de l'écran
         BottomButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
             onNextClick = {
-                // Passage à l'élément suivant ou redirection vers l'écran de login si c'est le dernier élément
                 if (currentIndex < contentList.size - 1) {
                     currentIndex++
                 } else {
@@ -101,7 +106,6 @@ fun IntroScreen(navController: NavController) {
         )
     }
 }
-
 // Fonction qui gère l'animation du contenu lors de la transition entre les éléments
 @Composable
 fun AnimatedContentSection(contentList: List<ContentItem>, currentIndex: Int) {

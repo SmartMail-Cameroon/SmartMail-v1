@@ -1,14 +1,7 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -78,7 +71,11 @@ fun SignUpScreen(navController: NavHostController) {
     var isChecked by remember { mutableStateOf(false) }
 
     // Column principale pour structurer l'écran d'inscription
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()) // Ajout du défilement vertical
+    ) {
 
         // Top bar avec le bouton de retour
         SignUpTopBar(
@@ -95,13 +92,10 @@ fun SignUpScreen(navController: NavHostController) {
             }
         )
 
-        val scrollState = rememberScrollState()
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(16.dp),
+                .padding(16.dp), // Ajout de padding pour l'espacement
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Image d'illustration (peut être remplacée par une autre image)
@@ -109,8 +103,8 @@ fun SignUpScreen(navController: NavHostController) {
                 painter = painterResource(id = R.drawable.image5), // Remplacez par votre image
                 contentDescription = "Sign Up Image",
                 modifier = Modifier
+                    .fillMaxWidth()
                     .height(180.dp) // Hauteur de l'image
-                    .fillMaxWidth() // Remplir toute la largeur
                     .padding() // Espacement autour de l'image
                     .clip(RoundedCornerShape(16.dp)) // Bord arrondi
                     .border(2.dp, Color.Gray, RoundedCornerShape(16.dp)) // Bordure de l'image
@@ -198,7 +192,7 @@ fun SignUpScreen(navController: NavHostController) {
             // Bouton d'inscription
             Button(
                 onClick = {
-                    navController.navigate("home") // Navigue vers l'écran de signup
+                    navController.navigate("loading") // Navigue vers l'écran de signup
                 },
                 modifier = Modifier
                     .fillMaxWidth()

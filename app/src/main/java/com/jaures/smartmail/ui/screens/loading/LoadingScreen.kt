@@ -24,22 +24,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.jaures.smartmail.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun LoadingScreen() {
+fun LoadingScreen(navController: NavHostController) {
     var rotation by remember { mutableStateOf(0f) }
     val animatedRotation by animateFloatAsState(
         targetValue = rotation,
         animationSpec = tween(durationMillis = 2000, easing = { it })
     )
 
-    // Animation en boucle
+    // Attendre 2 secondes avant de naviguer vers Home
     LaunchedEffect(Unit) {
-        while (true) {
-            rotation += 360f
-            delay(2000)
+        rotation += 360f // Déclenche l'animation une seule fois
+        delay(5000) // Attente de 2 secondes
+        navController.navigate("home") { // Remplace "home" par ta route réelle
+            popUpTo("loading") { inclusive = true } // Évite de revenir en arrière sur l'écran de chargement
         }
     }
 
@@ -105,5 +108,6 @@ fun LoadingScreen() {
 @Preview(showBackground = true)
 @Composable
 fun LoadingScreenPreview() {
-    LoadingScreen()
+    val navController = rememberNavController()
+    LoadingScreen(navController = navController)
 }

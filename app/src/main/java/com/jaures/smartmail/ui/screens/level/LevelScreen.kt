@@ -1,31 +1,49 @@
 package com.jaures.smartmail.ui.screens.level
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun LevelScreen(navController: NavHostController) {
+    val systemUiController = rememberSystemUiController()
+
+    // Masquer la barre de navigation
+    SideEffect {
+        systemUiController.isNavigationBarVisible = false
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState()) // Rendre l'écran scrollable
     ) {
-        // Header with image before "Level" title and "Back" button
+        // Header avec bouton "Back" et icône
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -43,18 +61,17 @@ fun LevelScreen(navController: NavHostController) {
                     .align(Alignment.CenterVertically)
             )
 
-            // Add Image before Level text
             Image(
-                painter = painterResource(id = com.jaures.smartmail.R.drawable.levelicon), // Replace with actual resource
+                painter = painterResource(id = com.jaures.smartmail.R.drawable.levelicon),
                 contentDescription = "Level Icon",
                 modifier = Modifier
-                    .size(53.dp, 54.dp) // Set size to 53x54
-                    .padding(end = 8.dp) // Space between the image and the text
+                    .size(50.dp) // Ajusté pour s'adapter aux petits écrans
+                    .padding(end = 8.dp)
             )
 
             Text(
                 text = "Level",
-                fontSize = 28.sp,
+                fontSize = 24.sp, // Réduit pour s'adapter aux écrans 5"
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 modifier = Modifier.weight(2f)
@@ -62,7 +79,7 @@ fun LevelScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.weight(1f))
         }
 
-        // Column for the three vertical images at the bottom
+        // Images scrollables
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,31 +87,27 @@ fun LevelScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // First Image
+            val imageModifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp) // Ajusté pour écrans plus petits
+                .clickable { /* Action on click */ }
+
             Image(
-                painter = painterResource(id = com.jaures.smartmail.R.drawable.level), // Replace with actual resource
+                painter = painterResource(id = com.jaures.smartmail.R.drawable.level),
                 contentDescription = "Image 1",
-                modifier = Modifier
-                    .size(355.dp, 229.dp) // Set size to 355x229
-                    .clickable { /* Action on image click */ }
+                modifier = imageModifier
             )
 
-            // Second Image
             Image(
-                painter = painterResource(id = com.jaures.smartmail.R.drawable.level2), // Replace with actual resource
+                painter = painterResource(id = com.jaures.smartmail.R.drawable.level2),
                 contentDescription = "Image 2",
-                modifier = Modifier
-                    .size(355.dp, 229.dp) // Set size to 355x229
-                    .clickable { /* Action on image click */ }
+                modifier = imageModifier
             )
 
-            // Third Image
             Image(
-                painter = painterResource(id = com.jaures.smartmail.R.drawable.level3), // Replace with actual resource
+                painter = painterResource(id = com.jaures.smartmail.R.drawable.level3),
                 contentDescription = "Image 3",
-                modifier = Modifier
-                    .size(355.dp, 229.dp) // Set size to 355x229
-                    .clickable { /* Action on image click */ }
+                modifier = imageModifier
             )
         }
     }
@@ -103,6 +116,6 @@ fun LevelScreen(navController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewLevelScreen() {
-    val navController = rememberNavController() // Replace with your NavController
+    val navController = rememberNavController()
     LevelScreen(navController = navController)
 }

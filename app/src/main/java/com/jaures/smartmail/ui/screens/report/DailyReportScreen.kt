@@ -1,122 +1,127 @@
-package com.jaures.smartmail.ui.screens.report
-
-import android.net.Uri
-import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DailyReportScreen(navController: NavController) {
-    Log.d("NavControllerCheck", "NavController hash: ${navController.hashCode()}")
-    val items = listOf(
-        Triple("Important", Color(0xFF4CAF50), "😊"), // Texte, couleur, emoji
-        Triple("Undecided", Color(0xFFFFC107), "😐"),
-        Triple("Unimportant", Color(0xFFF44336), "☹️")
-    )
-
+fun DailyReportUI(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()) // Ajout du défilement vertical
     ) {
-        Text(
-            text = "Daily report",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-        items.forEach { item ->
-            DailyReportCard(
-                text = item.first,
-                color = item.second,
-                emoji = item.third,
-                onClick = {
-                    val encodedItemId = item.first?.let { Uri.encode(it) } ?: ""
-                    if (encodedItemId.isNotBlank()) {
-                        Log.d("Navigationuoo", "Navigating to detail/$encodedItemId")
-                        try {
-                            navController.navigate("detail/$encodedItemId")
-                        } catch (e: Exception) {
-                            Log.e("NavigationError", "Error navigating to detail: ${e.message}")
-                        }
-                    } else {
-                        Log.e("NavigationError", "item.first is null or blank")
-                    }
-                }
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DailyReportCard(
-    text: String,
-    color: Color,
-    emoji: String,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(150.dp)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = color), // Couleur de fond
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp) // Élévation
-    ) {
-        Column(
+        // DailyReportOpBar
+        Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = emoji,
-                fontSize = 48.sp,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            Text(
-                text = text,
+                text = "Back",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color(0xFF5DB075),
+                modifier = Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically)
+            )
+            Text(
+                text = "Daily report",
+                fontSize = 28.sp, // Large title size
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.weight(2f)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
+
+        // Vertical Column containing 3 blocks
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(38.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // First Block
+            BlockWithEmoji(
+                backgroundColor = Color(0xFF4CAF50), // Green color
+                emojiResource = com.jaures.smartmail.R.drawable.important, // Replace with your actual emoji resource
+                label = "Important",
+                onClick = { navController.navigate("important") }
+            )
+
+            // Second Block
+            BlockWithEmoji(
+                backgroundColor = Color(0xFFFFEB3B), // Yellow color
+                emojiResource = com.jaures.smartmail.R.drawable.undecided, // Replace with your actual emoji resource
+                label = "Undecided",
+                onClick = { navController.navigate("undecided") }
+            )
+
+            // Third Block
+            BlockWithEmoji(
+                backgroundColor = Color(0xFFF44336), // Red color
+                emojiResource = com.jaures.smartmail.R.drawable.unimportant, // Replace with your actual emoji resource
+                label = "Unimportant",
+                onClick = { navController.navigate("unimportant") }
             )
         }
     }
 }
 
-// Preview
+@Composable
+fun BlockWithEmoji(
+    backgroundColor: Color,
+    emojiResource: Int,
+    label: String,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp) // Hauteur relative
+            .background(color = backgroundColor, shape = RoundedCornerShape(16.dp))
+            .clickable { onClick() }
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(id = emojiResource),
+            contentDescription = null,
+            modifier = Modifier.size(48.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = label,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
-fun DailyReportScreenPreview() {
-    val navController = rememberNavController()
-    DailyReportScreen(navController = navController)
+fun PreviewDailyReportUI() {
+    val navController = rememberNavController() // Replace with your NavController
+    DailyReportUI(navController = navController)
 }

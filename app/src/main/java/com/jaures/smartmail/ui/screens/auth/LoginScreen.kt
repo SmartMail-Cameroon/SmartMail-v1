@@ -2,17 +2,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -56,7 +49,11 @@ fun TopBar(
 // Composable principal pour l'écran de login
 @Composable
 fun LoginScreen(navController: NavHostController) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()) // Ajout du défilement vertical
+    ) {
 
         // Top bar avec le bouton de retour
         TopBar(
@@ -76,7 +73,8 @@ fun LoginScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(1f),
+                .weight(1f)
+                .padding(16.dp), // Ajout de padding pour l'espacement
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Image et autres éléments
@@ -84,9 +82,8 @@ fun LoginScreen(navController: NavHostController) {
                 painter = painterResource(id = R.drawable.image5),
                 contentDescription = "Login Image",
                 modifier = Modifier
-                    .height(200.dp)
                     .fillMaxWidth()
-                    .padding()
+                    .height(200.dp) // Hauteur relative
                     .clip(RoundedCornerShape(16.dp))
                     .border(2.dp, Color.Gray, RoundedCornerShape(16.dp))
             )
@@ -96,6 +93,7 @@ fun LoginScreen(navController: NavHostController) {
         }
     }
 }
+
 // Composable pour afficher les options de login avec une bordure en haut
 @Composable
 fun LoginOptionsWithTopBorder(navController: NavHostController) {
@@ -110,7 +108,7 @@ fun LoginOptionsWithTopBorder(navController: NavHostController) {
             .padding(16.dp) // Padding interne
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            Spacer(modifier = Modifier.height(160.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Boutons de login
             ButtonWithIcon(

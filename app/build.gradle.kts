@@ -58,6 +58,7 @@ dependencies {
 
     // Material icons for Visibility and VisibilityOff
     implementation("androidx.compose.material:material-icons-extended:1.5.1")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.2-alpha")
 
     // Testing dependencies
     testImplementation(libs.junit)
